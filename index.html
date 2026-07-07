@@ -35,6 +35,17 @@
 
   <!-- Academic / Semantic -->
   <meta name="robots" content="index, follow" />
+
+  <!-- Set theme before paint to avoid flash -->
+  <script>
+    (function () {
+      var saved = localStorage.getItem("theme");
+      var theme = saved ||
+        (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+
   <style>
     :root {
       --text: #1f2937;
@@ -44,14 +55,23 @@
       --border: #e5e7eb;
     }
 
+    [data-theme="dark"] {
+      --text: #e2e8fd;
+      --muted: #94a3b8;
+      --link: #8ab4f8;
+      --bg: #111522;
+      --border: #2a3247;
+    }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-                   Roboto, Helvetica, Arial, sans-serif;
+      font-family: "Iowan Old Style", "Palatino Linotype", Palatino,
+                   "Book Antiqua", Georgia, "Times New Roman", serif;
       background: var(--bg);
       color: var(--text);
       line-height: 1.65;
       margin: 0;
       padding: 0;
+      transition: background 0.25s ease, color 0.25s ease;
     }
 
     .container {
@@ -108,10 +128,34 @@
       font-size: 0.9rem;
       color: var(--muted);
     }
+
+    .theme-toggle {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      width: 38px;
+      height: 38px;
+      font-size: 1.05rem;
+      line-height: 1;
+      cursor: pointer;
+      transition: border-color 0.2s ease, transform 0.15s ease;
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--muted);
+      transform: scale(1.06);
+    }
   </style>
 </head>
 
 <body>
+  <button class="theme-toggle" id="theme-toggle"
+          aria-label="Toggle dark / light theme" title="Toggle theme"></button>
+
   <div class="container">
 
     <h1>Manav Garg</h1>
@@ -205,6 +249,14 @@
       </li>
 
       <li>
+        <strong>Rekol</strong> —
+        An interactive WhatsApp and web-based assistant for managing reminders,
+        daily tasks, grocery lists, and notes.
+        <br/>
+        <a href="https://github.com/ManavvGarg/Rekol" target="_blank">Code</a>
+      </li>
+
+      <li>
         <strong>Snippy</strong> —
         A highly customizable short-form video generator with a web UI —
         custom characters, background music, AI voices, animated subtitles,
@@ -257,5 +309,23 @@
     </footer>
 
   </div>
+
+  <script>
+    (function () {
+      var btn = document.getElementById("theme-toggle");
+      function setIcon() {
+        btn.textContent =
+          document.documentElement.getAttribute("data-theme") === "dark" ? "☀" : "☾";
+      }
+      btn.addEventListener("click", function () {
+        var next =
+          document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", next);
+        localStorage.setItem("theme", next);
+        setIcon();
+      });
+      setIcon();
+    })();
+  </script>
 </body>
 </html>
